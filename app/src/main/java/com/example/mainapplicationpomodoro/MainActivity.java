@@ -2,6 +2,9 @@ package com.example.mainapplicationpomodoro;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.media.Ringtone;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.widget.Button;
@@ -11,10 +14,12 @@ public class MainActivity extends AppCompatActivity {
     private Button btnStartStopMain;
     private TextView txtTimeMain;
     private CountDownTimer countDownTimer; //Для работы с таймером
-    private long timeLeftInMillSeconds = 600000; //Это начальное значение таймера 10:00
+    private long timeLeftInMillSeconds = 1000; //Это начальное значение таймера 10:00
 
     private boolean timerRunning = false;
 
+    Ringtone ringtone;
+    Uri notificationUri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,8 +31,14 @@ public class MainActivity extends AppCompatActivity {
 
         btnStartStopMain.setOnClickListener(v -> {
             startStop();
+            if (ringtone.isPlaying()) {
+                if (ringtone != null) {
+                    ringtone.stop();
+                }
+            }
         });
         updateTimer(); //При включении приложения устанавливаем значения таймера по умолчанию
+        findRingtone(); //Устанавливаем рингтон
     }
 
     public void startStop() { //Включаем таймер - когда он выключен. Выключаем - когда включен.
@@ -52,6 +63,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onFinish() { //Что делаем, когда таймер достигнет нуля
                 btnStartStopMain.setText("FINISH"); //Таймер завершился - пишем соответстующую надпись на кнопке startstop
+                if (ringtone != null) {
+                    ringtone.play();
+                }
             }
 
         }.start(); //Включаем таймер
@@ -81,5 +95,16 @@ public class MainActivity extends AppCompatActivity {
         }
 
         txtTimeMain.setText(timeLeftText);
+    }
+
+    public void findRingtone() {
+        notificationUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
+        ringtone = RingtoneManager.getRingtone(this, notificationUri);
+
+        if (ringtone == null) {
+            //Если рингтона по умолчанию нет, то попробуем достать звук звонка:
+            notificationUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
+            ringtone = RingtoneManager.getRingtone(this, notificationUri);
+        }
     }
 }
