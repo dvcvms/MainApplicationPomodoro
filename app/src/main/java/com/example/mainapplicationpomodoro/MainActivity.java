@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
@@ -21,6 +22,9 @@ public class MainActivity extends AppCompatActivity {
     Ringtone ringtone;
     Uri notificationUri;
 
+
+    private ImageButton btnSettingMainActivity;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,6 +32,8 @@ public class MainActivity extends AppCompatActivity {
 
         btnStartStopMain = findViewById(R.id.btn_startstop_main);
         txtTimeMain = findViewById(R.id.txt_time_main);
+
+        btnSettingMainActivity = findViewById(R.id.btn_setting_main_activity);
 
         btnStartStopMain.setOnClickListener(v -> {
             startStop();
@@ -39,6 +45,10 @@ public class MainActivity extends AppCompatActivity {
         });
         updateTimer(); //При включении приложения устанавливаем значения таймера по умолчанию
         findRingtone(); //Устанавливаем рингтон
+
+        btnSettingMainActivity.setOnClickListener(v -> {
+            setContentView(R.layout.activity_settings);
+        });
     }
 
     public void startStop() { //Включаем таймер - когда он выключен. Выключаем - когда включен.
