@@ -47,7 +47,6 @@ public class MainActivity extends AppCompatActivity {
         findRingtone(); //Устанавливаем рингтон
 
         btnSettingMainActivity.setOnClickListener(v -> {
-            setContentView(R.layout.activity_settings);
         });
     }
 
